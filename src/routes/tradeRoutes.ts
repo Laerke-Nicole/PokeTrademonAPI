@@ -1,10 +1,17 @@
 import express from "express";
+import {
+  createTradeOffer,
+  getTradeOffersForUser,
+  acceptTradeOffer,
+  declineTradeOffer,
+} from "../controllers/tradeController";
 
 const router = express.Router();
 
-// ✅ Example Route (Modify as needed)
-router.get("/", (req, res) => {
-  res.json({ message: "Trade routes are working!" });
-});
+// Only pass the function reference (DON'T CALL IT)
+router.post("/", createTradeOffer);
+router.get("/:userId", getTradeOffersForUser);
+router.patch("/:tradeId/accept", acceptTradeOffer); // ✅
+router.patch("/:tradeId/decline", declineTradeOffer); // ✅
 
-export default router; // ✅ Ensure this export exists
+export default router;

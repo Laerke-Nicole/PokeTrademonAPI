@@ -5,6 +5,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import connectDB from "./config/db"; 
 import routes from "./routes"; // ✅ Use centralized routes
+import tradeRoutes from "./routes/tradeRoutes";
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ connectDB();
 
 // ✅ Mount All Routes at `/api`
 app.use("/api", routes);
+app.use("/api/trades", tradeRoutes);
 
 // ✅ Default route to check if API is running
 app.get("/", (req, res) => {

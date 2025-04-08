@@ -1,7 +1,13 @@
 export interface IUser {
-    username: string;
-    email: string;
-    password: string;
-    collection: string[]; // Array of card IDs
-  }
+  username: string;
+  email: string;
+  password: string;
+  pokecoins: number;
+  collection: {
+    cardId: string;
+    quantity: number;
+    condition: string;
+  }[];
+}
+
   
