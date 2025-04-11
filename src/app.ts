@@ -6,9 +6,13 @@ import dotenv from "dotenv";
 import connectDB from "./config/db"; 
 import routes from "./routes"; // ✅ Use centralized routes
 import tradeRoutes from "./routes/tradeRoutes";
+import { setupSwagger } from "./config/swagger";
 
 dotenv.config();
 const app = express();
+
+// ✅ Set up Swagger documentation
+setupSwagger(app);
 
 // ✅ Middleware
 app.use(express.json()); 
@@ -23,7 +27,7 @@ connectDB();
 app.use("/api", routes);
 app.use("/api/trades", tradeRoutes);
 
-// ✅ Default route to check if API is running
+// ✅ // Health check
 app.get("/", (req, res) => {
   res.status(200).send("API is running...");
 });
