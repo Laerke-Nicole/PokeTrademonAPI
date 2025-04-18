@@ -3,6 +3,7 @@ import { registerUser, loginUser } from "../controllers/authController";
 
 const router = express.Router();
 
+
 /**
  * @swagger
  * tags:

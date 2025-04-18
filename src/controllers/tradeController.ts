@@ -76,7 +76,7 @@ export const acceptTradeOffer = async (
 
     for (const card of trade.senderCards) {
       const quantity = card.quantity ?? 1;
-      const senderCard = sender.collection.find(c => c.cardId === card.cardId);
+      const senderCard = sender.cardCollection.find(c => c.cardId === card.cardId);
       if (!senderCard || senderCard.quantity < quantity) {
         res.status(400).json({ message: `Sender doesn't have enough of card ${card.cardId}` });
         return;
@@ -85,7 +85,7 @@ export const acceptTradeOffer = async (
 
     for (const card of trade.receiverCards) {
       const quantity = card.quantity ?? 1;
-      const receiverCard = receiver.collection.find(c => c.cardId === card.cardId);
+      const receiverCard = receiver.cardCollection.find(c => c.cardId === card.cardId);
       if (!receiverCard || receiverCard.quantity < quantity) {
         res.status(400).json({ message: `Receiver doesn't have enough of card ${card.cardId}` });
         return;
@@ -95,14 +95,14 @@ export const acceptTradeOffer = async (
     // Perform sender → receiver transfer
     for (const card of trade.senderCards) {
       const quantity = card.quantity ?? 1;
-      const senderCard = sender.collection.find(c => c.cardId === card.cardId);
+      const senderCard = sender.cardCollection.find(c => c.cardId === card.cardId);
       if (senderCard) senderCard.quantity -= quantity;
 
-      const receiverCard = receiver.collection.find(c => c.cardId === card.cardId);
+      const receiverCard = receiver.cardCollection.find(c => c.cardId === card.cardId);
       if (receiverCard) {
         receiverCard.quantity += quantity;
       } else {
-        receiver.collection.push({
+        receiver.cardCollection.push({
           cardId: card.cardId,
           quantity,
           condition: "mint",
@@ -113,14 +113,14 @@ export const acceptTradeOffer = async (
     // Perform receiver → sender transfer
     for (const card of trade.receiverCards) {
       const quantity = card.quantity ?? 1;
-      const receiverCard = receiver.collection.find(c => c.cardId === card.cardId);
+      const receiverCard = receiver.cardCollection.find(c => c.cardId === card.cardId);
       if (receiverCard) receiverCard.quantity -= quantity;
 
-      const senderCard = sender.collection.find(c => c.cardId === card.cardId);
+      const senderCard = sender.cardCollection.find(c => c.cardId === card.cardId);
       if (senderCard) {
         senderCard.quantity += quantity;
       } else {
-        sender.collection.push({
+        sender.cardCollection.push({
           cardId: card.cardId,
           quantity,
           condition: "mint",

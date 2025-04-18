@@ -3,7 +3,7 @@ export interface IUser {
   email: string;
   password: string;
   pokecoins: number;
-  collection: {
+  cardCollection: {
     cardId: string;
     quantity: number;
     condition: string;
