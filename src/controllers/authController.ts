@@ -99,7 +99,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             { expiresIn: "2h" }
         );
 
-        res.status(200).json({ message: "Login successful!", token });
+        res.status(200).json({ message: "Login successful!", token, userId: user._id });
+        console.log("🔐 Returning login response:", {
+            token,
+            userId: user._id,
+          });
+          
 
     } catch (error) {
         res.status(500).json({ message: "Error while logging in.", error });

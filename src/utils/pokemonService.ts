@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const POKEMON_TCG_API_URL = "https://api.pokemontcg.io/v2/cards";
-const API_KEY = process.env.POKEMON_TCG_API_KEY || ""; // Set API key in .env
 
 export const getAllPokemonCards = async (
   q: string = "",
@@ -9,7 +8,10 @@ export const getAllPokemonCards = async (
   pageSize: number = 20
 ) => {
   try {
-    const response = await axios.get("https://api.pokemontcg.io/v2/cards", {
+    const API_KEY = process.env.POKEMON_TCG_API_KEY || "";
+    console.log("🔑 Using API key:", API_KEY); // Double-check here
+
+    const response = await axios.get(POKEMON_TCG_API_URL, {
       headers: {
         "X-Api-Key": API_KEY,
       },
@@ -19,16 +21,19 @@ export const getAllPokemonCards = async (
         pageSize,
       },
     });
+
     return response.data;
-  } catch (error) {
-    console.error("Error fetching Pokémon cards:", error);
+  } catch (error: any) {
+    console.error("❌ Error fetching Pokémon cards:", error?.response?.data || error.message);
     throw new Error("Failed to fetch Pokémon cards.");
   }
 };
 
 
+
 export const getPokemonCardById = async (cardId: string) => {
   try {
+    const API_KEY = process.env.POKEMON_TCG_API_KEY || "";
     const response = await axios.get(`${POKEMON_TCG_API_URL}/${cardId}`, {
       headers: {
         "X-Api-Key": API_KEY,

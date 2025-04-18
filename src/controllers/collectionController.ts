@@ -22,7 +22,7 @@ export const addCardToCollection = async (req: Request, res: Response, next: Nex
     }
 
     await user.save();
-    res.status(200).json({ message: "Card added to collection", collection: user.collection });
+    res.status(200).json({ message: "Card added to collection", collection: user.cardCollection });
   } catch (error) {
     next(error); // Properly hand off errors
   }
@@ -41,7 +41,7 @@ export const getUserCollection = async (req: Request, res: Response, next: NextF
       return;
     }
 
-    res.json({ collection: user.collection });
+    res.json({ collection: user.cardCollection });
   } catch (error) {
     next(error); // Delegate to Express error handler
   }
