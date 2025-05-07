@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import TradeOffer from "../models/TradeOfferModel";
 import User from "../models/User";
+import mongoose from "mongoose";
+
 
 // Create a new trade offer
 export const createTradeOffer = async (
@@ -38,17 +40,25 @@ export const getTradeOffersForUser = async (
 ): Promise<void> => {
   try {
     const userId = req.params.userId;
+    const objectId = new mongoose.Types.ObjectId(userId); // Convert string to ObjectId
 
     const trades = await TradeOffer.find({
       $or: [{ senderId: userId }, { receiverId: userId }],
-    }).sort({ createdAt: -1 });
+    })
+      .populate('senderId', 'username') // ✅ Get sender username
+      .populate('receiverId', 'username') // ✅ Get receiver username
+      .sort({ createdAt: -1 });
+    
 
     res.status(200).json(trades);
   } catch (err) {
     console.error("Failed to fetch trades:", err);
-    next(err); // Pass the error to Express error middleware
+    next(err);
   }
 };
+
+
+
 
 export const acceptTradeOffer = async (
   req: Request,
