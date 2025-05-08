@@ -1,5 +1,5 @@
 import { Schema, model, Query } from 'mongoose';
-import { News } from '../interfaces/news';
+import { News } from '../interfaces/News';
 
 const newsSchema = new Schema<News>({
     title: { type: String, required: true, min: 6, max: 255 },
