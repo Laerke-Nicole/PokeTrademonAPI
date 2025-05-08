@@ -11,12 +11,20 @@ export const createTradeOffer = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { senderId, receiverId, senderCards, receiverCards } = req.body;
+    const { senderId, receiverUsername, senderCards, receiverCards } = req.body;
 
-    if (!senderId || !receiverId || !Array.isArray(senderCards) || !Array.isArray(receiverCards)) {
-      res.status(400).json({ message: "Invalid trade data" });
-      return;
-    }
+if (!senderId || !receiverUsername || !Array.isArray(senderCards) || !Array.isArray(receiverCards)) {
+  res.status(400).json({ message: "Invalid trade data" });
+  return;
+}
+
+const receiver = await User.findOne({ username: receiverUsername });
+if (!receiver) {
+  res.status(404).json({ message: "Receiver user not found" });
+  return;
+}
+const receiverId = receiver._id;
+
 
     const trade = await TradeOffer.create({
       senderId,
