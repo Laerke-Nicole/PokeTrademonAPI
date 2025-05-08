@@ -1,5 +1,6 @@
 import express from "express";
-import { addNews, getNews, updateNews, deleteNews } from "../controllers/newsController";
+import { createNews, getNewsByID, getAllNews, updateNewsByID, deleteNewsByID } from "../controllers/newsController";
+import { securityToken } from '../controllers/authController';
 
 const router = express.Router();
 
@@ -61,8 +62,50 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post("/", addNews); 
+router.post("/news", securityToken, createNews); 
 
+
+
+// get news by ID
+/**
+ * @swagger
+ * /news/{id}:
+ *   get:
+ *     summary: Get a single news item by ID
+ *     tags: [News]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the news item
+ *     responses:
+ *       200:
+ *         description: A single news item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 title:
+ *                   type: string
+ *                 subTitle:
+ *                   type: string
+ *                 text:
+ *                   type: string
+ *                 imageURL:
+ *                   type: string
+ *                 isHidden:
+ *                   type: boolean
+ *       404:
+ *         description: News not found
+ *       500:
+ *         description: Error fetching news item
+ */
+router.get('/news/:id', getNewsByID);
 
 /**
  * @swagger
@@ -101,12 +144,12 @@ router.post("/", addNews);
  *       500:
  *         description: Error fetching collection
  */
-router.get("/:newsId", getNews);
+router.get("/news", getAllNews);
 
 /**
  * @swagger
  * /news/{userId}/{newsId}:
- *   patch:
+ *   put:
  *     summary: Update a news
  *     tags: [News]
  *     parameters:
@@ -151,7 +194,7 @@ router.get("/:newsId", getNews);
  *       500:
  *         description: Server error
  */
-router.patch("/:userId/:newsId", updateNews);
+router.put('/news/:id', securityToken, updateNewsByID);
 
 /**
  * @swagger
@@ -188,7 +231,7 @@ router.patch("/:userId/:newsId", updateNews);
  *       500:
  *         description: Internal server error
  */
-router.delete("/:userId/:newsId", deleteNews);
+router.delete('/news/:id', securityToken, deleteNewsByID);
 
 
 export default router;
