@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { newsModel } from '../models/newsModel';
-import { connectToDB, disconnectToDB } from '../repository/database';
+import { newsModel } from '../models/NewsModel';
+import connectDB from '../config/db';
 
 /**
  * @param req 
@@ -10,7 +10,7 @@ import { connectToDB, disconnectToDB } from '../repository/database';
 export async function createNews(req: Request, res: Response): Promise<void> {
     const data = req.body;
     try {
-        await connectToDB();
+        await connectDB();
         const news = new newsModel(data);
         const result = await news.save();
 
@@ -18,9 +18,6 @@ export async function createNews(req: Request, res: Response): Promise<void> {
     }
     catch (error) {
         res.status(500).send("Error creating news. Error: " + error);
-    }
-    finally {
-        await disconnectToDB();
     }
 }
 
@@ -32,16 +29,13 @@ export async function createNews(req: Request, res: Response): Promise<void> {
 // get/retrieve all news
 export async function getAllNews(req: Request, res: Response) {
     try {
-        await connectToDB();
+        await connectDB();
         const result = await newsModel.find({});
         
         res.status(200).send(result);
     }
     catch (error) {
         res.status(500).send("Error getting news. Error: " + error);
-    }
-    finally {
-        await disconnectToDB();
     }
 }
 
@@ -52,7 +46,7 @@ export async function getAllNews(req: Request, res: Response) {
 // get/retrieve news by id
 export async function getNewsByID(req: Request, res: Response) {
     try {
-        await connectToDB();
+        await connectDB();
 
         const id = req.params.id;
         const result = await newsModel.find({ _id: id });
@@ -61,9 +55,6 @@ export async function getNewsByID(req: Request, res: Response) {
     }
     catch (error) {
         res.status(500).send("Error getting news by id. Error: " + error);
-    }
-    finally {
-        await disconnectToDB();
     }
 }
 
@@ -77,7 +68,7 @@ export async function updateNewsByID(req: Request, res: Response) {
 
     const id = req.params.id;
     try {
-        await connectToDB();
+        await connectDB();
 
         const result = await newsModel.findByIdAndUpdate(id, req.body);
 
@@ -90,9 +81,6 @@ export async function updateNewsByID(req: Request, res: Response) {
     }
     catch (error) {
         res.status(500).send("Error updating news by id. Error: " + error);
-    }
-    finally {
-        await disconnectToDB();
     }
 }
 
@@ -107,7 +95,7 @@ export async function deleteNewsByID(req: Request, res: Response) {
 
     const id = req.params.id;
     try {
-        await connectToDB();
+        await connectDB();
 
         const result = await newsModel.findByIdAndDelete(id);
 
@@ -120,8 +108,5 @@ export async function deleteNewsByID(req: Request, res: Response) {
     }
     catch (error) {
         res.status(500).send("Error deleting news by id. Error: " + error);
-    }
-    finally {
-        await disconnectToDB();
     }
 }
