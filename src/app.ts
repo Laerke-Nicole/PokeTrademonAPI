@@ -8,6 +8,7 @@ import routes from "./routes"; // ✅ Use centralized routes
 import tradeRoutes from "./routes/tradeRoutes";
 import { setupSwagger } from "./config/swagger";
 import collectionRoutes from "./routes/collectionRoutes";
+import newsRoutes from "./routes/newsRoutes";
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ connectDB();
 app.use("/api", routes);
 app.use("/api/trades", tradeRoutes);
 app.use("/api/collections", collectionRoutes);
+app.use("/api/news", newsRoutes);
 
 // ✅ // Health check
 app.get("/", (req, res) => {
