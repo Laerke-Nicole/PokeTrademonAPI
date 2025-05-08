@@ -9,4 +9,6 @@ export interface News extends Document {
     date: string;
     theme: string;
     ishidden: boolean;
-}
+    _createdBy: string; 
+  }
+  
