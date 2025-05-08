@@ -6,8 +6,7 @@ const newsSchema = new Schema<News>({
     subTitle: { type: String, required: true, min: 6, max: 255 },
     text: { type: String, required: true, min: 6, max: 1024 },
     imageURL: { type: String, required: true },
-    ishidden: { type: Boolean, required: false },
-    _createdBy: { type: String, ref: 'User', required: true }
+    ishidden: { type: Boolean, required: false }
 });
 
 
