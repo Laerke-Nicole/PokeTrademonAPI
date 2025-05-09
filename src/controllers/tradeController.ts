@@ -103,13 +103,37 @@ export const acceptTradeOffer = async (
   next: NextFunction
 ): Promise<void> => {
   console.log("✅ acceptTradeOffer endpoint hit");
+  
 
   try {
     const tradeId = req.params.tradeId;
+    const currentUserId = req.body.userId;
+
+    console.log("Trade ID:", tradeId);
+console.log("Incoming userId:", currentUserId);
+
+    if (!currentUserId) {
+      res.status(400).json({ message: "Missing userId" });
+      return;
+    }
+    console.log("✅ userId received:", currentUserId);
+
+
     const trade = await TradeOffer.findById(tradeId);
 
     if (!trade || trade.status !== "pending") {
       res.status(400).json({ message: "Trade not found or not pending" });
+      return;
+    }
+
+    // 🔐 Handle open trades
+    if (trade.isOpenOffer && !trade.receiverId) {
+      trade.receiverId = currentUserId;
+    }
+
+    // 🔐 Enforce authorization
+    if (!trade.isOpenOffer && trade.receiverId?.toString() !== currentUserId) {
+      res.status(403).json({ message: "You are not authorized to accept this trade" });
       return;
     }
 
@@ -124,55 +148,49 @@ export const acceptTradeOffer = async (
     const findCard = (cards: IUserCard[], id: string) =>
       cards.find((card) => card.cardId === id);
 
+    // ✅ Check sender has the cards
     for (const card of trade.senderCards) {
-      const quantity = card.quantity ?? 1;
       const senderCard = findCard(sender.cardCollection, card.cardId);
-      if (!senderCard || senderCard.quantity < quantity) {
-        res.status(400).json({ message: `Sender doesn't have enough of card ${card.cardId}` });
+      if (!senderCard || senderCard.quantity < card.quantity) {
+        res.status(400).json({ message: `Sender lacks card ${card.cardId}` });
         return;
       }
     }
 
+    // ✅ Check receiver has the cards
     for (const card of trade.receiverCards) {
-      const quantity = card.quantity ?? 1;
       const receiverCard = findCard(receiver.cardCollection, card.cardId);
-      if (!receiverCard || receiverCard.quantity < quantity) {
-        res.status(400).json({ message: `Receiver doesn't have enough of card ${card.cardId}` });
-        return;
+      if (!receiverCard || receiverCard.quantity < card.quantity) {
+       res.status(400).json({ message: `You don't have enough of card ${card.cardId}` });
+       return;
       }
     }
 
+    // 🔄 Transfer sender → receiver
     for (const card of trade.senderCards) {
-      const quantity = card.quantity ?? 1;
+      const quantity = card.quantity;
       const senderCard = findCard(sender.cardCollection, card.cardId);
       if (senderCard) senderCard.quantity -= quantity;
 
-      let receiverCard = findCard(receiver.cardCollection, card.cardId);
+      const receiverCard = findCard(receiver.cardCollection, card.cardId);
       if (receiverCard) {
         receiverCard.quantity += quantity;
       } else {
-        receiver.cardCollection.push({
-          cardId: card.cardId,
-          quantity,
-          condition: "mint",
-        });
+        receiver.cardCollection.push({ cardId: card.cardId, quantity, condition: "mint" });
       }
     }
 
+    // 🔄 Transfer receiver → sender
     for (const card of trade.receiverCards) {
-      const quantity = card.quantity ?? 1;
+      const quantity = card.quantity;
       const receiverCard = findCard(receiver.cardCollection, card.cardId);
       if (receiverCard) receiverCard.quantity -= quantity;
 
-      let senderCard = findCard(sender.cardCollection, card.cardId);
+      const senderCard = findCard(sender.cardCollection, card.cardId);
       if (senderCard) {
         senderCard.quantity += quantity;
       } else {
-        sender.cardCollection.push({
-          cardId: card.cardId,
-          quantity,
-          condition: "mint",
-        });
+        sender.cardCollection.push({ cardId: card.cardId, quantity, condition: "mint" });
       }
     }
 
@@ -190,6 +208,8 @@ export const acceptTradeOffer = async (
   }
 };
 
+
+
 export const declineTradeOffer = async (
   req: Request,
   res: Response,
@@ -197,6 +217,8 @@ export const declineTradeOffer = async (
 ): Promise<void> => {
   try {
     const tradeId = req.params.tradeId;
+    const currentUserId = req.body.userId;
+
     const trade = await TradeOffer.findById(tradeId);
 
     if (!trade) {
@@ -207,6 +229,24 @@ export const declineTradeOffer = async (
     if (trade.status !== "pending") {
       res.status(400).json({ message: "Only pending trades can be declined" });
       return;
+    }
+
+    // ✅ Optional: block decline if user is not part of the trade
+    const isSender = trade.senderId?.toString() === currentUserId;
+    const isReceiver = trade.receiverId?.toString() === currentUserId;
+
+    // For open offers (no receiverId), allow only the sender to cancel
+    if (trade.isOpenOffer && !trade.receiverId) {
+      if (!isSender) {
+        res.status(403).json({ message: "Only the sender can cancel an open offer" });
+        return;
+      }
+    } else {
+      // For normal trades, allow either sender or receiver to decline
+      if (!isSender && !isReceiver) {
+        res.status(403).json({ message: "You are not part of this trade" });
+        return;
+      }
     }
 
     trade.status = "declined";
