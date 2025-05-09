@@ -1,46 +1,80 @@
 import { Request, Response, NextFunction } from "express";
 import TradeOffer from "../models/TradeOfferModel";
-import User from "../models/User";
-import mongoose from "mongoose";
+import UserModel, { IUserCard } from "../models/UserModel";
 
-
-// Create a new trade offer
 export const createTradeOffer = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { senderId, receiverUsername, senderCards, receiverCards } = req.body;
+    const {
+      senderId,
+      receiverUsername,
+      senderCards,
+      receiverCards,
+      isOpenOffer = false
+    } = req.body;
 
-if (!senderId || !receiverUsername || !Array.isArray(senderCards) || !Array.isArray(receiverCards)) {
-  res.status(400).json({ message: "Invalid trade data" });
-  return;
-}
+    if (!senderId || !senderCards || !receiverCards) {
+      res.status(400).json({ message: 'Missing required fields' });
+      return;
+    }
 
-const receiver = await User.findOne({ username: receiverUsername });
-if (!receiver) {
-  res.status(404).json({ message: "Receiver user not found" });
-  return;
-}
-const receiverId = receiver._id;
+    let receiver = null;
+    let receiverId = undefined;
 
+    if (!isOpenOffer) {
+      if (!receiverUsername) {
+        res.status(400).json({ message: 'Receiver username required for direct trades' });
+        return;
+      }
 
-    const trade = await TradeOffer.create({
+      receiver = await UserModel.findOne({
+        username: { $regex: new RegExp(`^${receiverUsername}$`, 'i') }
+      });
+
+      if (!receiver) {
+        res.status(404).json({ message: 'Receiver user not found' });
+        return;
+      }
+
+      receiverId = receiver._id;
+    }
+
+    const newTrade = await TradeOffer.create({
       senderId,
       receiverId,
       senderCards,
       receiverCards,
+      status: 'pending',
+      isOpenOffer
     });
 
-    res.status(201).json(trade);
+    res.status(201).json(newTrade);
   } catch (err) {
-    console.error("Failed to create trade offer:", err);
-    next(err); // Pass the error to the next middleware
+    console.error('Failed to create trade offer:', err);
+    next(err);
   }
 };
 
-// Get all trade offers involving a user
+export const getOpenTradeOffers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const openTrades = await TradeOffer.find({ isOpenOffer: true, status: 'pending' })
+      .populate('senderId', 'username')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(openTrades);
+  } catch (err) {
+    console.error("Failed to fetch open trade offers:", err);
+    next(err);
+  }
+};
+
 export const getTradeOffersForUser = async (
   req: Request,
   res: Response,
@@ -48,15 +82,13 @@ export const getTradeOffersForUser = async (
 ): Promise<void> => {
   try {
     const userId = req.params.userId;
-    const objectId = new mongoose.Types.ObjectId(userId); // Convert string to ObjectId
 
     const trades = await TradeOffer.find({
       $or: [{ senderId: userId }, { receiverId: userId }],
     })
-      .populate('senderId', 'username') // ✅ Get sender username
-      .populate('receiverId', 'username') // ✅ Get receiver username
+      .populate('senderId', 'username')
+      .populate('receiverId', 'username')
       .sort({ createdAt: -1 });
-    
 
     res.status(200).json(trades);
   } catch (err) {
@@ -64,9 +96,6 @@ export const getTradeOffersForUser = async (
     next(err);
   }
 };
-
-
-
 
 export const acceptTradeOffer = async (
   req: Request,
@@ -84,17 +113,20 @@ export const acceptTradeOffer = async (
       return;
     }
 
-    const sender = await User.findById(trade.senderId);
-    const receiver = await User.findById(trade.receiverId);
+    const sender = await UserModel.findById(trade.senderId);
+    const receiver = await UserModel.findById(trade.receiverId);
 
     if (!sender || !receiver) {
       res.status(404).json({ message: "Sender or receiver not found" });
       return;
     }
 
+    const findCard = (cards: IUserCard[], id: string) =>
+      cards.find((card) => card.cardId === id);
+
     for (const card of trade.senderCards) {
       const quantity = card.quantity ?? 1;
-      const senderCard = sender.cardCollection.find(c => c.cardId === card.cardId);
+      const senderCard = findCard(sender.cardCollection, card.cardId);
       if (!senderCard || senderCard.quantity < quantity) {
         res.status(400).json({ message: `Sender doesn't have enough of card ${card.cardId}` });
         return;
@@ -103,20 +135,19 @@ export const acceptTradeOffer = async (
 
     for (const card of trade.receiverCards) {
       const quantity = card.quantity ?? 1;
-      const receiverCard = receiver.cardCollection.find(c => c.cardId === card.cardId);
+      const receiverCard = findCard(receiver.cardCollection, card.cardId);
       if (!receiverCard || receiverCard.quantity < quantity) {
         res.status(400).json({ message: `Receiver doesn't have enough of card ${card.cardId}` });
         return;
       }
     }
 
-    // Perform sender → receiver transfer
     for (const card of trade.senderCards) {
       const quantity = card.quantity ?? 1;
-      const senderCard = sender.cardCollection.find(c => c.cardId === card.cardId);
+      const senderCard = findCard(sender.cardCollection, card.cardId);
       if (senderCard) senderCard.quantity -= quantity;
 
-      const receiverCard = receiver.cardCollection.find(c => c.cardId === card.cardId);
+      let receiverCard = findCard(receiver.cardCollection, card.cardId);
       if (receiverCard) {
         receiverCard.quantity += quantity;
       } else {
@@ -128,13 +159,12 @@ export const acceptTradeOffer = async (
       }
     }
 
-    // Perform receiver → sender transfer
     for (const card of trade.receiverCards) {
       const quantity = card.quantity ?? 1;
-      const receiverCard = receiver.cardCollection.find(c => c.cardId === card.cardId);
+      const receiverCard = findCard(receiver.cardCollection, card.cardId);
       if (receiverCard) receiverCard.quantity -= quantity;
 
-      const senderCard = sender.cardCollection.find(c => c.cardId === card.cardId);
+      let senderCard = findCard(sender.cardCollection, card.cardId);
       if (senderCard) {
         senderCard.quantity += quantity;
       } else {
@@ -148,6 +178,7 @@ export const acceptTradeOffer = async (
 
     trade.status = "accepted";
     trade.updatedAt = new Date();
+
     await sender.save();
     await receiver.save();
     await trade.save();
@@ -158,7 +189,6 @@ export const acceptTradeOffer = async (
     next(err);
   }
 };
-
 
 export const declineTradeOffer = async (
   req: Request,
@@ -189,6 +219,3 @@ export const declineTradeOffer = async (
     next(err);
   }
 };
-
-
-

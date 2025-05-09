@@ -4,6 +4,7 @@ import {
   getTradeOffersForUser,
   acceptTradeOffer,
   declineTradeOffer,
+  getOpenTradeOffers
 } from "../controllers/tradeController";
 
 const router = express.Router();
@@ -29,13 +30,12 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - senderId
- *               - receiverId
  *               - senderCards
  *               - receiverCards
  *             properties:
  *               senderId:
  *                 type: string
- *               receiverId:
+ *               receiverUsername:
  *                 type: string
  *               senderCards:
  *                 type: array
@@ -55,11 +55,25 @@ const router = express.Router();
  *                       type: string
  *                     quantity:
  *                       type: number
+ *               isOpenOffer:
+ *                 type: boolean
  *     responses:
  *       201:
  *         description: Trade created successfully
  */
 router.post("/", createTradeOffer);
+
+/**
+ * @swagger
+ * /trades/open:
+ *   get:
+ *     summary: Get all open trade offers
+ *     tags: [Trades]
+ *     responses:
+ *       200:
+ *         description: List of open trade offers
+ */
+router.get("/open", getOpenTradeOffers);
 
 /**
  * @swagger

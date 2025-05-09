@@ -19,3 +19,28 @@ export const getUserByUsername = async (
     next(err); // Forward the error
   }
 };
+
+export const checkUsernameExists = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { username } = req.query;
+
+  if (!username || typeof username !== 'string') {
+    res.status(400).json({ message: 'Username query param required' });
+    return;
+  }
+
+  try {
+    const user = await UserModel.findOne({
+      username: { $regex: new RegExp(`^${username}$`, 'i') }  // case-insensitive match
+    });
+
+    res.json({ exists: !!user });
+  } catch (err) {
+    console.error("Failed to check if username exists:", err);
+    next(err);
+  }
+};
+

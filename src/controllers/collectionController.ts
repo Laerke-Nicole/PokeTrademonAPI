@@ -1,20 +1,19 @@
 import { Request, Response, NextFunction } from "express";
-import User from "../models/User";
-
+import UserModel, { IUserCard } from "../models/UserModel"; // ✅ Merged model with IUserCard
 /**
  * Add a card to a user's collection
  */
 export const addCardToCollection = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { userId, cardId } = req.body;
-    const user = await User.findById(userId);
+    const user = await UserModel.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
     // Example logic: Add or increment card
-    const existing = user.cardCollection.find((item) => item.cardId === cardId);
+    const existing = user.cardCollection.find((item: IUserCard) => item.cardId === cardId);
     if (existing) {
       existing.quantity += 1;
     } else {
@@ -35,7 +34,7 @@ export const getUserCollection = async (req: Request, res: Response, next: NextF
   try {
     const { userId } = req.params;
 
-    const user = await User.findById(userId);
+    const user = await UserModel.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -59,13 +58,13 @@ export const updateCardInCollection = async (
     const { userId, cardId } = req.params;
     const { quantity, condition } = req.body;
 
-    const user = await User.findById(userId);
+    const user = await UserModel.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    const card = user.cardCollection.find((c) => c.cardId === cardId);
+    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
     if (!card) {
       res.status(404).json({ message: "Card not found in collection" });
       return;
@@ -92,13 +91,13 @@ export const deleteCardFromCollection = async (
   try {
     const { userId, cardId } = req.params;
 
-    const user = await User.findById(userId);
+    const user = await UserModel.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    user.cardCollection = user.cardCollection.filter((c) => c.cardId !== cardId);
+    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
     await user.save();
 
     res.json({ message: "Card removed from collection" });
