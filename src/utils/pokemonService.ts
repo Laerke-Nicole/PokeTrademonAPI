@@ -9,25 +9,22 @@ export const getAllPokemonCards = async (
 ) => {
   try {
     const API_KEY = process.env.POKEMON_TCG_API_KEY || "";
-    console.log("🔑 Using API key:", API_KEY); // Double-check here
+    console.log("🔑 Using API key:", API_KEY); // ← Keep this
 
     const response = await axios.get(POKEMON_TCG_API_URL, {
       headers: {
         "X-Api-Key": API_KEY,
       },
-      params: {
-        q,
-        page,
-        pageSize,
-      },
+      params: { q, page, pageSize },
     });
 
     return response.data;
   } catch (error: any) {
-    console.error("❌ Error fetching Pokémon cards:", error?.response?.data || error.message);
-    throw new Error("Failed to fetch Pokémon cards.");
+    console.error("❌ AXIOS ERROR:", error?.response?.data || error.message || error);
+    throw new Error(error?.response?.data?.message || "Failed to fetch Pokémon cards.");
   }
 };
+
 
 
 
