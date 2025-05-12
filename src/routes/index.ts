@@ -3,6 +3,7 @@ import authRoutes from "./authRoutes";
 import pokemonRoutes from "./pokemonRoutes";
 import collectionRoutes from "./collectionRoutes";
 import tradeRoutes from "./tradeRoutes";
+import userRoutes from "./userRoutes";
 
 const router: Router = Router();
 
@@ -17,6 +18,7 @@ router.get("/", (req: Request, res: Response) => {
  * ✅ Register all sub-routes under `/api`
  */
 router.use("/auth", authRoutes);
+router.use("/users", userRoutes);
 router.use("/pokemon", pokemonRoutes);
 router.use("/collections", collectionRoutes);
 router.use("/trades", tradeRoutes);

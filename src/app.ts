@@ -5,9 +5,16 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import connectDB from "./config/db"; 
 import routes from "./routes"; // ✅ Use centralized routes
+import tradeRoutes from "./routes/tradeRoutes";
+import { setupSwagger } from "./config/swagger";
+import collectionRoutes from "./routes/collectionRoutes";
+import newsRoutes from "./routes/newsRoutes";
 
 dotenv.config();
 const app = express();
+
+// ✅ Set up Swagger documentation
+setupSwagger(app);
 
 // ✅ Middleware
 app.use(express.json()); 
@@ -20,8 +27,11 @@ connectDB();
 
 // ✅ Mount All Routes at `/api`
 app.use("/api", routes);
+app.use("/api/trades", tradeRoutes);
+app.use("/api/collections", collectionRoutes);
+app.use("/api/news", newsRoutes);
 
-// ✅ Default route to check if API is running
+// ✅ // Health check
 app.get("/", (req, res) => {
   res.status(200).send("API is running...");
 });

@@ -1,21 +1,22 @@
 import express from "express";
-import { addCardToCollection, getUserCollection, updateCardInCollection, deleteCardFromCollection } from "../controllers/collectionController";
+import { createNews, getNewsByID, getAllNews, updateNewsByID, deleteNewsByID } from "../controllers/newsController";
+import { securityToken } from '../controllers/authController';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: Collections
- *   description: Manage user's card collections
+ *   name: News
+ *   description: Manage news
  */
 
 /**
  * @swagger
- * /collections:
+ * /news:
  *   post:
- *     summary: Add a card to the user's collection
- *     tags: [Collections]
+ *     summary: Add a news
+ *     tags: [News]
  *     requestBody:
  *       required: true
  *       content:
@@ -24,19 +25,19 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - userId
- *               - cardId
+ *               - newsId
  *             properties:
  *               userId:
  *                 type: string
  *                 description: The user's ID
  *                 example: "660f12abc1234def56789abc"
- *               cardId:
+ *               newsId:
  *                 type: string
- *                 description: The ID of the card to add
+ *                 description: The ID of the news to add
  *                 example: "xy7-54"
  *     responses:
  *       200:
- *         description: Card successfully added to the collection
+ *         description: News successfully added
  *         content:
  *           application/json:
  *             schema:
@@ -44,13 +45,13 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Card added to collection"
+ *                   example: "News added"
  *                 collection:
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
- *                       cardId:
+ *                       newsId:
  *                         type: string
  *                       quantity:
  *                         type: number
@@ -61,24 +62,67 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post("/", addCardToCollection); 
+router.post("/news", securityToken, createNews); 
 
+
+
+// get news by ID
 /**
  * @swagger
- * /collections/{userId}:
+ * /news/{id}:
  *   get:
- *     summary: Get a user's full collection
- *     tags: [Collections]
+ *     summary: Get a single news item by ID
+ *     tags: [News]
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the user
+ *         description: The ID of the news item
  *     responses:
  *       200:
- *         description: The user's card collection
+ *         description: A single news item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 title:
+ *                   type: string
+ *                 subTitle:
+ *                   type: string
+ *                 text:
+ *                   type: string
+ *                 imageURL:
+ *                   type: string
+ *                 isHidden:
+ *                   type: boolean
+ *       404:
+ *         description: News not found
+ *       500:
+ *         description: Error fetching news item
+ */
+router.get('/news/:id', getNewsByID);
+
+/**
+ * @swagger
+ * /news:
+ *   get:
+ *     summary: Get all news
+ *     tags: [News]
+ *     parameters:
+ *       - in: path
+ *         name: newsId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the news
+ *     responses:
+ *       200:
+ *         description: All news
  *         content:
  *           application/json:
  *             schema:
@@ -89,38 +133,38 @@ router.post("/", addCardToCollection);
  *                   items:
  *                     type: object
  *                     properties:
- *                       cardId:
+ *                       newsId:
  *                         type: string
  *                       quantity:
  *                         type: number
  *                       condition:
  *                         type: string
  *       404:
- *         description: User not found
+ *         description: News not found
  *       500:
  *         description: Error fetching collection
  */
-router.get("/:userId", getUserCollection);
+router.get("/news", getAllNews);
 
 /**
  * @swagger
- * /collections/{userId}/{cardId}:
- *   patch:
- *     summary: Update a card in the user's collection
- *     tags: [Collections]
+ * /news/{userId}/{newsId}:
+ *   put:
+ *     summary: Update a news
+ *     tags: [News]
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: newsId
  *         required: true
  *         schema:
  *           type: string
  *         description: The user's ID
  *       - in: path
- *         name: cardId
+ *         name: newsId
  *         required: true
  *         schema:
  *           type: string
- *         description: The card ID to update
+ *         description: The news ID to update
  *     requestBody:
  *       required: true
  *       content:
@@ -136,7 +180,7 @@ router.get("/:userId", getUserCollection);
  *                 example: "used"
  *     responses:
  *       200:
- *         description: Card updated successfully
+ *         description: News updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -144,20 +188,20 @@ router.get("/:userId", getUserCollection);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Card updated in collection"
+ *                   example: "News updated"
  *       404:
- *         description: User or card not found
+ *         description: User or news not found
  *       500:
  *         description: Server error
  */
-router.patch("/:userId/:cardId", updateCardInCollection);
+router.put('/news/:id', securityToken, updateNewsByID);
 
 /**
  * @swagger
- * /collections/{userId}/{cardId}:
+ * /news/{userId}/{newsId}:
  *   delete:
- *     summary: Remove a card from the user's collection
- *     tags: [Collections]
+ *     summary: Remove a news
+ *     tags: [News]
  *     parameters:
  *       - in: path
  *         name: userId
@@ -166,14 +210,14 @@ router.patch("/:userId/:cardId", updateCardInCollection);
  *           type: string
  *         description: The user's ID
  *       - in: path
- *         name: cardId
+ *         name: newsId
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the card to remove
+ *         description: The ID of the news to remove
  *     responses:
  *       200:
- *         description: Card successfully removed from the collection
+ *         description: News successfully removed
  *         content:
  *           application/json:
  *             schema:
@@ -181,13 +225,13 @@ router.patch("/:userId/:cardId", updateCardInCollection);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Card removed from collection"
+ *                   example: "News removed"
  *       404:
  *         description: User not found
  *       500:
  *         description: Internal server error
  */
-router.delete("/:userId/:cardId", deleteCardFromCollection);
+router.delete('/news/:id', securityToken, deleteNewsByID);
 
 
 export default router;
