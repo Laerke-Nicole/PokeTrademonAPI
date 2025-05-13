@@ -86,9 +86,10 @@ export const getTradeOffersForUser = async (
     const trades = await TradeOffer.find({
       $or: [{ senderId: userId }, { receiverId: userId }],
     })
-      .populate('senderId', 'username')
-      .populate('receiverId', 'username')
+      .populate('senderId', '_id username') // ✅ include _id
+      .populate('receiverId', '_id username') // ✅ include _id
       .sort({ createdAt: -1 });
+    
 
     res.status(200).json(trades);
   } catch (err) {
