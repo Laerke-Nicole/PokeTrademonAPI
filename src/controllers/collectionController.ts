@@ -1,17 +1,111 @@
-import { Request, Response } from "express";
-import UserModel from "../models/UserModel";
-
-export const addCardToCollection = async (req: Request, res: Response) => {
+import { Request, Response, NextFunction } from "express";
+import UserModel, { IUserCard } from "../models/UserModel"; // ✅ Merged model with IUserCard
+/**
+ * Add a card to a user's collection
+ */
+export const addCardToCollection = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { userId, cardId } = req.body;
     const user = await UserModel.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
 
-    user.collection.push(cardId);
+    // Example logic: Add or increment card
+    const existing = user.cardCollection.find((item: IUserCard) => item.cardId === cardId);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      user.cardCollection.push({ cardId, quantity: 1, condition: "mint" });
+    }
+
     await user.save();
-    res.json({ message: "Card added to collection", collection: user.collection });
+    res.status(200).json({ message: "Card added to collection", collection: user.cardCollection });
   } catch (error) {
-    res.status(500).json({ message: "Error adding card" });
+    next(error); // Properly hand off errors
   }
 };
+
+/**
+ * Get a user's card collection
+ */
+export const getUserCollection = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const { userId } = req.params;
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json({ collection: user.cardCollection });
+  } catch (error) {
+    next(error); // Delegate to Express error handler
+  }
+};
+
+/**
+ * Update a card from a user's collection
+ */
+export const updateCardInCollection = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { userId, cardId } = req.params;
+    const { quantity, condition } = req.body;
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
+    if (!card) {
+      res.status(404).json({ message: "Card not found in collection" });
+      return;
+    }
+
+    if (quantity !== undefined) card.quantity = quantity;
+    if (condition !== undefined) card.condition = condition;
+
+    await user.save();
+    res.json({ message: "Card updated", card });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Delete a card from a user's collection
+ */
+export const deleteCardFromCollection = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { userId, cardId } = req.params;
+
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
+    await user.save();
+
+    res.json({ message: "Card removed from collection" });
+  } catch (error) {
+    next(error); // ✅ proper error handling
+  }
+};
+
+
+
 
