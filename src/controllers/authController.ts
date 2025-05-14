@@ -6,7 +6,7 @@ import { validateUserRegistration, validateUserLogin } from "../utils/validation
 import { generateToken } from "../utils/jwt";
 
 /**
- * ✅ Register a new user
+ *  Register a new user
  */
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -42,7 +42,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 };
 
 /**
- * ✅ Login an existing user
+ *  Login an existing user
  */
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {

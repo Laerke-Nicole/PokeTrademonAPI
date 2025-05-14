@@ -27,9 +27,6 @@ connectDB();
 
 // ✅ Mount All Routes at `/api`
 app.use("/api", routes);
-app.use("/api/trades", tradeRoutes);
-app.use("/api/collections", collectionRoutes);
-app.use("/api/news", newsRoutes);
 
 // ✅ // Health check
 app.get("/", (req, res) => {

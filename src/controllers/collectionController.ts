@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import UserModel from "../models/UserModel";
 import { IUserCard } from "../interfaces/User";
+
 /**
  * Add a card to a user's collection
  */
@@ -33,7 +34,7 @@ export const addCardToCollection = async (req: Request, res: Response, next: Nex
  */
 export const getUserCollection = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { userId } = req.params;
+    const userId: string = req.params.userId;
 
     const user = await UserModel.findById(userId);
     if (!user) {
@@ -43,9 +44,10 @@ export const getUserCollection = async (req: Request, res: Response, next: NextF
 
     res.json({ collection: user.cardCollection });
   } catch (error) {
-    next(error); // Delegate to Express error handler
+    next(error);
   }
 };
+
 
 /**
  * Update a card from a user's collection
@@ -98,12 +100,13 @@ export const deleteCardFromCollection = async (
       return;
     }
 
-    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
-    await user.save();
+    user.cardCollection = user.cardCollection.filter((c: IUserCard) => c.cardId !== cardId);
+await user.save();
+
 
     res.json({ message: "Card removed from collection" });
   } catch (error) {
-    next(error); // ✅ proper error handling
+    next(error); 
   }
 };
 
