@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import TradeOffer from "../models/TradeOfferModel";
 import UserModel from "../models/UserModel";
 import { IUserCard } from "../interfaces/User";
+import { findCard, transferCard } from "../utils/tradeUtils";
+
 
 export const createTradeOffer = async (
   req: Request,
@@ -168,33 +170,14 @@ console.log("Incoming userId:", currentUserId);
       }
     }
 
-    // 🔄 Transfer sender → receiver
     for (const card of trade.senderCards) {
-      const quantity = card.quantity;
-      const senderCard = findCard(sender.cardCollection, card.cardId);
-      if (senderCard) senderCard.quantity -= quantity;
-
-      const receiverCard = findCard(receiver.cardCollection, card.cardId);
-      if (receiverCard) {
-        receiverCard.quantity += quantity;
-      } else {
-        receiver.cardCollection.push({ cardId: card.cardId, quantity, condition: "mint" });
-      }
+      transferCard(sender.cardCollection, receiver.cardCollection, card.cardId, card.quantity);
     }
-
-    // 🔄 Transfer receiver → sender
+    
     for (const card of trade.receiverCards) {
-      const quantity = card.quantity;
-      const receiverCard = findCard(receiver.cardCollection, card.cardId);
-      if (receiverCard) receiverCard.quantity -= quantity;
-
-      const senderCard = findCard(sender.cardCollection, card.cardId);
-      if (senderCard) {
-        senderCard.quantity += quantity;
-      } else {
-        sender.cardCollection.push({ cardId: card.cardId, quantity, condition: "mint" });
-      }
+      transferCard(receiver.cardCollection, sender.cardCollection, card.cardId, card.quantity);
     }
+    
 
     trade.status = "accepted";
     trade.updatedAt = new Date();

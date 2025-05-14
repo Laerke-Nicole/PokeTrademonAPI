@@ -1,20 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
-
-interface ITradeCard {
-  cardId: string;
-  quantity: number;
-}
-
-export interface ITradeOffer extends Document {
-  senderId: mongoose.Types.ObjectId;
-  receiverId?: mongoose.Types.ObjectId;
-  senderCards: ITradeCard[];
-  receiverCards: ITradeCard[];
-  status: "pending" | "accepted" | "declined" | "cancelled";
-  isOpenOffer: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import mongoose, { Schema } from "mongoose";
+import { ITradeOffer } from "../interfaces/TradeOffer";
 
 const tradeOfferSchema = new Schema<ITradeOffer>({
   senderId: { type: Schema.Types.ObjectId, ref: "User", required: true },
