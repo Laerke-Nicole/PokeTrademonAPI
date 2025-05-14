@@ -6,8 +6,12 @@ import {
   declineTradeOffer,
   getOpenTradeOffers
 } from "../controllers/tradeController";
+import { securityToken } from "../middleware/authMiddleware";
 
 const router = express.Router();
+
+// ✅ Protect all trade routes
+router.use(securityToken);
 
 /**
  * @swagger
