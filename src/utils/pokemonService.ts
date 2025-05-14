@@ -18,7 +18,10 @@ export const getAllPokemonCards = async (
       params: { q, page, pageSize },
     });
 
-    return response.data;
+    return {
+      data: response.data.data,
+      totalCount: response.data.totalCount
+    };
   } catch (error: any) {
     console.error("❌ AXIOS ERROR:", error?.response?.data || error.message || error);
     throw new Error(error?.response?.data?.message || "Failed to fetch Pokémon cards.");

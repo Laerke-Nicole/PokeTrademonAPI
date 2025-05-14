@@ -9,10 +9,16 @@ export const fetchAllCards = async (req: Request, res: Response) => {
       parseInt(page.toString(), 10),
       parseInt(pageSize.toString(), 10)
     );
-    res.json(cards);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching Pokémon cards", error });
-  }
+    res.json({
+      cards: cards.data,
+      total: cards.totalCount
+    });
+      } catch (error) {
+    res.status(500).json({
+      message: "Error fetching Pokémon cards",
+      error: (error as Error).message,
+    });
+      }
 };
 
 export const fetchCardById = async (req: Request, res: Response) => {
