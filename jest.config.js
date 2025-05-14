@@ -1,11 +1,10 @@
-const { createDefaultPreset } = require("ts-jest/presets")
-
-const tsJestTransformCfg = createDefaultPreset().transform
-
-/** @type {import("jest").Config} **/
 module.exports = {
+  preset: "ts-jest",
   testEnvironment: "node",
+  roots: ["<rootDir>/src/tests"],
   transform: {
-    ...tsJestTransformCfg,
+    "^.+\\.ts$": "ts-jest"
   },
+  moduleFileExtensions: ["ts", "js", "json"],
+  testMatch: ["**/*.test.ts"]
 };
