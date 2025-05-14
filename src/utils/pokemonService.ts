@@ -9,8 +9,6 @@ export const getAllPokemonCards = async (
 ) => {
   try {
     const API_KEY = process.env.POKEMON_TCG_API_KEY || "";
-    console.log("🔑 Using API key:", API_KEY); // ← Keep this
-
     const response = await axios.get(POKEMON_TCG_API_URL, {
       headers: {
         "X-Api-Key": API_KEY,

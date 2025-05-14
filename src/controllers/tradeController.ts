@@ -105,23 +105,15 @@ export const acceptTradeOffer = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
-  console.log("✅ acceptTradeOffer endpoint hit");
-  
-
+): Promise<void> => {  
   try {
     const tradeId = req.params.tradeId;
     const currentUserId = req.body.userId;
-
-    console.log("Trade ID:", tradeId);
-console.log("Incoming userId:", currentUserId);
 
     if (!currentUserId) {
       res.status(400).json({ message: "Missing userId" });
       return;
     }
-    console.log("✅ userId received:", currentUserId);
-
 
     const trade = await TradeOffer.findById(tradeId);
 
