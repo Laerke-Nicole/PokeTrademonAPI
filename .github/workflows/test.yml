@@ -1,0 +1,33 @@
+name: CI + Deploy to Render
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🟢 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🧪 Run tests
+        run: npm run test
+
+  deploy_to_render:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: ${{ success() }}
+
+    steps:
+      - name: 🚀 Trigger Render Deploy Hook
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
