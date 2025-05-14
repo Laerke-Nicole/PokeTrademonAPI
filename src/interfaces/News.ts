@@ -1,5 +1,3 @@
-import { IUser } from './User';
-
 export interface News extends Document {
   id: string;
   title: string;
@@ -9,5 +7,5 @@ export interface News extends Document {
   date: string;
   theme: string;
   ishidden: boolean;
+  userId: string;
 }
-  
