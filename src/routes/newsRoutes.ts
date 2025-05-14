@@ -1,6 +1,6 @@
 import express from "express";
 import { createNews, getNewsByID, getAllNews, updateNewsByID, deleteNewsByID } from "../controllers/newsController";
-import { securityToken } from '../controllers/authController';
+import { securityToken } from '../middleware/authMiddleware';
 
 const router = express.Router();
 

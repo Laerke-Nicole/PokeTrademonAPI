@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import TradeOffer from "../models/TradeOfferModel";
-import UserModel, { IUserCard } from "../models/UserModel";
+import UserModel from "../models/UserModel";
+import { IUserCard } from "../interfaces/User";
 
 export const createTradeOffer = async (
   req: Request,

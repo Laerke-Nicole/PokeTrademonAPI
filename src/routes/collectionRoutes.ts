@@ -1,7 +1,11 @@
 import express from "express";
+import { securityToken } from "../middleware/authMiddleware";
 import { addCardToCollection, getUserCollection, updateCardInCollection, deleteCardFromCollection } from "../controllers/collectionController";
 
 const router = express.Router();
+
+// ✅ Protect all /collections routes
+router.use(securityToken);
 
 /**
  * @swagger

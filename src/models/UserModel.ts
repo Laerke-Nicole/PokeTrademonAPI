@@ -1,20 +1,10 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Types } from 'mongoose';
+import { IUser } from '../interfaces/User';
 
-export interface IUserCard {
-  cardId: string;
-  quantity: number;
-  condition: string;
+export interface IUserDocument extends IUser, Document {
+  _id: Types.ObjectId; 
 }
-
-export interface IUser extends Document {
-  username: string;
-  email: string;
-  password: string;
-  pokecoins: number;
-  cardCollection: IUserCard[];
-}
-
-const UserSchema = new Schema<IUser>({
+const UserSchema = new Schema<IUserDocument>({
   username: { type: String, required: true, unique: true },
   email:    { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -31,7 +21,6 @@ const UserSchema = new Schema<IUser>({
   }
 });
 
-// ✅ Prevent OverwriteModelError in dev environments
-const UserModel = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+const UserModel = mongoose.models.User || mongoose.model<IUserDocument>('User', UserSchema);
 
 export default UserModel;

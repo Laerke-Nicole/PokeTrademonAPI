@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import UserModel, { IUserCard } from "../models/UserModel"; // ✅ Merged model with IUserCard
+import UserModel from "../models/UserModel";
+import { IUserCard } from "../interfaces/User";
 /**
  * Add a card to a user's collection
  */
