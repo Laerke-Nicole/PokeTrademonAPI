@@ -22,7 +22,6 @@ export const createTradeOffer = async (
 
     if (!senderId || !senderCards || !receiverCards) {
       res.status(400).json({ message: 'Missing required fields' });
-      console.log("📦 Incoming Trade Payload:", req.body);
 
       return;
     }
@@ -199,6 +198,14 @@ export const acceptTradeOffer = async (
     await receiver.save();
     await trade.save();
 
+    //  Notify sender
+    if (trade.senderId.toString() !== currentUserId) {
+      await Notification.create({
+        userId: trade.senderId,
+        message: `Your trade offer was accepted by ${receiver.username}`,
+      });
+    }
+
     res.status(200).json({ message: "Trade accepted", trade });
   } catch (err) {
     console.error("Failed to accept trade offer:", err);
@@ -250,6 +257,14 @@ export const declineTradeOffer = async (
     trade.status = "declined";
     trade.updatedAt = new Date();
     await trade.save();
+
+    //  Notify the sender
+    if (trade.senderId.toString() !== currentUserId) {
+      await Notification.create({
+        userId: trade.senderId,
+        message: `Your trade offer was declined.`,
+      });
+    }
 
     res.status(200).json({ message: "Trade declined", trade });
   } catch (err) {
