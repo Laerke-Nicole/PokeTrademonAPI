@@ -5,6 +5,7 @@ import collectionRoutes from "./collectionRoutes";
 import tradeRoutes from "./tradeRoutes";
 import userRoutes from "./userRoutes";
 import newsRoutes from "./newsRoutes";
+import notificationRoutes from './notificationRoutes';
 
 const router: Router = Router();
 
@@ -24,6 +25,7 @@ router.use("/pokemon", pokemonRoutes);
 router.use("/collections", collectionRoutes);
 router.use("/trades", tradeRoutes);
 router.use("/news", newsRoutes);
+router.use("/notifications", notificationRoutes);
 
 
 export default router;

@@ -3,6 +3,7 @@ import TradeOffer from "../models/TradeOfferModel";
 import UserModel from "../models/UserModel";
 import { IUserCard } from "../interfaces/User";
 import { findCard, transferCard } from "../utils/tradeUtils";
+import Notification from "../models/NotificationModel";
 
 
 export const createTradeOffer = async (
@@ -21,8 +22,11 @@ export const createTradeOffer = async (
 
     if (!senderId || !senderCards || !receiverCards) {
       res.status(400).json({ message: 'Missing required fields' });
+      console.log("📦 Incoming Trade Payload:", req.body);
+
       return;
     }
+    
 
     let receiver = null;
     let receiverId = undefined;
@@ -54,11 +58,28 @@ export const createTradeOffer = async (
       isOpenOffer
     });
 
+    // 🔔 Notification logic 
+if (isOpenOffer) {
+  const otherUsers = await UserModel.find({ _id: { $ne: senderId } });
+  const bulkNotifications = otherUsers.map((user) => ({
+    userId: user._id,
+    message: `A new open trade offer was created.`,
+  }));
+  await Notification.insertMany(bulkNotifications);
+} else if (receiverId) {
+  await Notification.create({
+    userId: receiverId,
+    message: `You have received a trade offer from ${receiver?.username}`,
+  });
+}
+    
+
     res.status(201).json(newTrade);
   } catch (err) {
     console.error('Failed to create trade offer:', err);
     next(err);
   }
+  
 };
 
 export const getOpenTradeOffers = async (
