@@ -8,7 +8,8 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
-  pokecoins: number;
+  avatarUrl: string;
+  //pokecoins: number;
   cardCollection: IUserCard[];
 }
 

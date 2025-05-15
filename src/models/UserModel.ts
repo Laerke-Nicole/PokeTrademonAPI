@@ -8,7 +8,8 @@ const UserSchema = new Schema<IUserDocument>({
   username: { type: String, required: true, unique: true },
   email:    { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  pokecoins: { type: Number, default: 1000 },
+  //pokecoins: { type: Number, default: 1000 },
+  avatarUrl: { type: String, default: "" },
   cardCollection: {
     type: [
       {
