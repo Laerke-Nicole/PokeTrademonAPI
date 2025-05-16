@@ -100,8 +100,11 @@ export const deleteCardFromCollection = async (
       return;
     }
 
-    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
-    await user.save();
+    user.cardCollection = user.cardCollection.filter((c: IUserCard) => c.cardId !== cardId);
+await user.save();
+
+res.json({ message: "Card removed from collection" });
+
 
 
     res.json({ message: "Card removed from collection" });
