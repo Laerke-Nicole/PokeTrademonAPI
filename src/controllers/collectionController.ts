@@ -67,7 +67,7 @@ export const updateCardInCollection = async (
       return;
     }
 
-    const card = user.cardCollection.find((c: IUserCard) => c.cardId?.toString() === cardId.toString());
+    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
     if (!card) {
       res.status(404).json({ message: "Card not found in collection" });
       return;
@@ -100,8 +100,8 @@ export const deleteCardFromCollection = async (
       return;
     }
 
-    user.cardCollection = user.cardCollection.filter((c: IUserCard) => c.cardId !== cardId);
-await user.save();
+    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
+    await user.save();
 
 
     res.json({ message: "Card removed from collection" });
@@ -109,7 +109,3 @@ await user.save();
     next(error); 
   }
 };
-
-
-
-
