@@ -42,6 +42,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
+router.get('/me', securityToken, getCurrentUser);
 
 /**
  * @swagger
@@ -72,6 +73,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
+router.patch('/update', securityToken, updateUserProfile);
 
 /**
  * @swagger
@@ -89,6 +91,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
+router.delete('/delete', securityToken, deleteUser);
 
 /**
  * @swagger
@@ -109,6 +112,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
+router.get('/username/:username', getUserByUsername);
 
 /**
  * @swagger
@@ -127,6 +131,7 @@ const router = express.Router();
  *       200:
  *         description: Result of check
  */
+router.get('/check', checkUsernameExists);
 
 
 export default router;
