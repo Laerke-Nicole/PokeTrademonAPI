@@ -67,7 +67,7 @@ export const updateCardInCollection = async (
       return;
     }
 
-    const card = user.cardCollection.find((c: IUserCard) => c.cardId === cardId);
+    const card = user.cardCollection.find((c: IUserCard) => c.cardId?.toString() === cardId.toString());
     if (!card) {
       res.status(404).json({ message: "Card not found in collection" });
       return;
