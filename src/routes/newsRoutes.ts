@@ -62,7 +62,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post("/news", securityToken, createNews); 
+router.post("/", securityToken, createNews); 
 
 
 
@@ -105,7 +105,7 @@ router.post("/news", securityToken, createNews);
  *       500:
  *         description: Error fetching news item
  */
-router.get('/news/:id', getNewsByID);
+router.get('/:id', getNewsByID);
 
 /**
  * @swagger
@@ -113,13 +113,6 @@ router.get('/news/:id', getNewsByID);
  *   get:
  *     summary: Get all news
  *     tags: [News]
- *     parameters:
- *       - in: path
- *         name: newsId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the news
  *     responses:
  *       200:
  *         description: All news
@@ -144,23 +137,17 @@ router.get('/news/:id', getNewsByID);
  *       500:
  *         description: Error fetching collection
  */
-router.get("/news", getAllNews);
+router.get("/", getAllNews);
 
 /**
  * @swagger
- * /news/{userId}/{newsId}:
+ * /news/{id}:
  *   put:
  *     summary: Update a news
  *     tags: [News]
  *     parameters:
  *       - in: path
- *         name: newsId
- *         required: true
- *         schema:
- *           type: string
- *         description: The user's ID
- *       - in: path
- *         name: newsId
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -194,23 +181,17 @@ router.get("/news", getAllNews);
  *       500:
  *         description: Server error
  */
-router.put('/news/:id', securityToken, updateNewsByID);
+router.put('/:id', securityToken, updateNewsByID);
 
 /**
  * @swagger
- * /news/{userId}/{newsId}:
+ * /news/{id}:
  *   delete:
  *     summary: Remove a news
  *     tags: [News]
  *     parameters:
  *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: The user's ID
- *       - in: path
- *         name: newsId
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -231,7 +212,7 @@ router.put('/news/:id', securityToken, updateNewsByID);
  *       500:
  *         description: Internal server error
  */
-router.delete('/news/:id', securityToken, deleteNewsByID);
+router.delete('/:id', securityToken, deleteNewsByID);
 
 
 export default router;
