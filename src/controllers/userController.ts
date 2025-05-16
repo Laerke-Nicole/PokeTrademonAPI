@@ -54,7 +54,7 @@ export const getCurrentUser = async (
   try {
     const userId = req.user?._id;
 
-    const user = await UserModel.findById(userId).select('_id username email');
+    const user = await UserModel.findById(userId).select('_id username email userRole');
     if (!user) {
       res.status(404).json({ message: 'User not found' });
       return;
@@ -64,6 +64,7 @@ export const getCurrentUser = async (
       _id: user._id,
       username: user.username,
       email: user.email,
+      userRole: user.userRole,
     });
   } catch (err) {
     console.error("Failed to get current user:", err);
