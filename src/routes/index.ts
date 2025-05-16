@@ -28,4 +28,5 @@ router.use("/news", newsRoutes);
 router.use("/notifications", notificationRoutes);
 
 
+
 export default router;

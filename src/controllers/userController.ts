@@ -46,6 +46,33 @@ export const checkUsernameExists = async (
   }
 };
 
+export const getCurrentUser = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+
+    const user = await UserModel.findById(userId).select('_id username email');
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    });
+  } catch (err) {
+    console.error("Failed to get current user:", err);
+    next(err);
+  }
+};
+
+
+
 export const updateUserProfile = async (
   req: AuthRequest,
   res: Response,

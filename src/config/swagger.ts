@@ -16,8 +16,22 @@ export const setupSwagger = (app: Express) => {
           url: `http://localhost:${process.env.PORT || 5004}/api`
         },
       ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT'
+          }
+        }
+      },
+      security: [
+        {
+          bearerAuth: []
+        }
+      ]
     },
-    apis: ["./src/routes/*.ts"],
+    apis: ["./src/routes/*.ts"], // ✅ this is where @swagger comments live
   };
 
   const swaggerSpec = swaggerJsdoc(swaggerOptions);
