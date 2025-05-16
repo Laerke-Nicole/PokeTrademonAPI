@@ -2,10 +2,12 @@ import { Schema, model, Query } from 'mongoose';
 import { News } from '../interfaces/News';
 
 const newsSchema = new Schema<News>({
-    title: { type: String, required: true, min: 6, max: 255 },
-    subTitle: { type: String, required: true, min: 6, max: 255 },
+    title: { type: String, required: true, min: 2, max: 100 },
+    subTitle: { type: String, required: true, min: 2, max: 100 },
     text: { type: String, required: true, min: 6, max: 1024 },
     imageURL: { type: String, required: true },
+    date: { type: String, required: true, min: 8, max: 10 },
+    theme: { type: String, required: true, min: 2, max: 100 },
     ishidden: { type: Boolean, required: false },
     userId: { type: String, required: true },
 });
