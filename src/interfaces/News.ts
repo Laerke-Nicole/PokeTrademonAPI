@@ -6,6 +6,6 @@ export interface News extends Document {
   imageURL: string;
   date: string;
   theme: string;
-  ishidden: boolean;
+  isHidden: boolean;
   userId: string;
 }

@@ -8,7 +8,7 @@ const newsSchema = new Schema<News>({
     imageURL: { type: String, required: true },
     date: { type: String, required: true, min: 8, max: 10 },
     theme: { type: String, required: true, min: 2, max: 100 },
-    ishidden: { type: Boolean, default: false, required: false },
+    isHidden: { type: Boolean, default: false, required: false },
     userId: { type: String, required: true },
 });
 

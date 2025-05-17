@@ -98,6 +98,10 @@ router.post("/", securityToken, createNews);
  *                   type: string
  *                 imageURL:
  *                   type: string
+ *                 date:
+ *                   type: string
+ *                 theme:   
+ *                  type: string
  *                 isHidden:
  *                   type: boolean
  *       404:
