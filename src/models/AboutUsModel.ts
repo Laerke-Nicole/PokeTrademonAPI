@@ -3,7 +3,7 @@ import { AboutUs } from '../interfaces/AboutUs';
 
 const aboutUsSchema = new Schema<AboutUs>({
     aboutUsTitle: { type: String, required: true, min: 2, max: 100 },
-    aboutUsText: { type: String, required: true, min: 6, max: 1024 },
+    aboutUsText: { type: String, required: true, min: 6, max: 255 },
     mission: { type: String, required: true, min: 2, max: 255 },
     vision: { type: String, required: true, min: 2, max: 255 },
     valuesSubTitle: { type: String, required: true, min: 2, max: 100 },
