@@ -5,6 +5,7 @@ import collectionRoutes from "./collectionRoutes";
 import tradeRoutes from "./tradeRoutes";
 import userRoutes from "./userRoutes";
 import newsRoutes from "./newsRoutes";
+import AboutRoutes from "./aboutUsRoutes";
 import notificationRoutes from './notificationRoutes';
 
 const router: Router = Router();
@@ -26,6 +27,7 @@ router.use("/collections", collectionRoutes);
 router.use("/trades", tradeRoutes);
 router.use("/news", newsRoutes);
 router.use("/notifications", notificationRoutes);
+router.use("/aboutUs", AboutRoutes);
 
 
 
