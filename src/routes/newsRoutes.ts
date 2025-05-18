@@ -11,6 +11,8 @@ const router = express.Router();
  *   description: Manage news
  */
 
+
+// add news
 /**
  * @swagger
  * /news:
@@ -103,6 +105,8 @@ router.post("/", securityToken, createNews);
  */
 router.get('/:id', getNewsByID);
 
+
+// get all news
 /**
  * @swagger
  * /news:
@@ -147,6 +151,8 @@ router.get('/:id', getNewsByID);
  */
 router.get("/", getAllNews);
 
+
+// update news by ID
 /**
  * @swagger
  * /news/{id}:
@@ -193,6 +199,8 @@ router.get("/", getAllNews);
  */
 router.put('/:id', securityToken, updateNewsByID);
 
+
+// delete news by ID
 /**
  * @swagger
  * /news/{id}:

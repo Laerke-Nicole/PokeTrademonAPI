@@ -11,11 +11,13 @@ const router = express.Router();
  *   description: Manage AboutUs
  */
 
+
+// create AboutUs
 /**
  * @swagger
  * /aboutUs:
  *   post:
- *     summary: Add a AboutUs
+ *     summary: Create a new AboutUs entry
  *     tags: [AboutUs]
  *     requestBody:
  *       required: true
@@ -25,45 +27,48 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - userId
- *               - aboutUsId
+ *               - aboutUsTitle
+ *               - aboutUsText
  *             properties:
  *               userId:
  *                 type: string
- *                 description: The user's ID
- *                 example: "660f12abc1234def56789abc"
- *               aboutUsId:
+ *               aboutUsTitle:
  *                 type: string
- *                 description: The ID of the about us to add
- *                 example: "xy7-54"
+ *               aboutUsText:
+ *                 type: string
+ *               mission:
+ *                 type: string
+ *               vision:
+ *                 type: string
+ *               valuesSubTitle:
+ *                 type: string
+ *               valueOneTitle:
+ *                 type: string
+ *               valueOne:
+ *                 type: string
+ *               valueTwoTitle:
+ *                 type: string
+ *               valueTwo:
+ *                 type: string
+ *               valueThreeTitle:
+ *                 type: string
+ *               valueThree:
+ *                 type: string
+ *               imageURL:
+ *                 type: string
  *     responses:
- *       200:
- *         description: About us successfully added
+ *       201:
+ *         description: AboutUs successfully created
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "About us added"
- *                 collection:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       aboutUsId:
- *                         type: string
- *                       quantity:
- *                         type: number
- *                       condition:
- *                         type: string
- *       404:
- *         description: User not found
+ *               $ref: '#/components/schemas/AboutUs'
+ *       400:
+ *         description: Invalid input
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
 router.post("/", securityToken, createAboutUs); 
-
 
 
 // get AboutUs by ID
@@ -111,6 +116,8 @@ router.post("/", securityToken, createAboutUs);
  */
 router.get('/:id', getAboutUsByID);
 
+
+// get all AboutUs
 /**
  * @swagger
  * /aboutUs:
@@ -130,11 +137,33 @@ router.get('/:id', getAboutUsByID);
  *                   items:
  *                     type: object
  *                     properties:
- *                       aboutUsId:
+ *                       id:
  *                         type: string
- *                       quantity:
- *                         type: number
- *                       condition:
+ *                       aboutUsTitle:
+ *                         type: string
+ *                       aboutUsText:
+ *                         type: string
+ *                       mission:
+ *                         type: string
+ *                       vision:
+ *                         type: string
+ *                       valuesSubTitle:
+ *                         type: string
+ *                       valueOneTitle:
+ *                         type: string
+ *                       valueOne:
+ *                         type: string
+ *                       valueTwoTitle:
+ *                         type: string
+ *                       valueTwo:
+ *                         type: string
+ *                       valueThreeTitle:
+ *                         type: string
+ *                       valueThree:
+ *                         type: string
+ *                       imageURL:
+ *                         type: string
+ *                       userId:
  *                         type: string
  *       404:
  *         description: AboutUs not found
@@ -143,11 +172,13 @@ router.get('/:id', getAboutUsByID);
  */
 router.get("/", getAllAboutUs);
 
+
+// update AboutUs by ID
 /**
  * @swagger
  * /aboutUs/{id}:
  *   put:
- *     summary: Update a AboutUs
+ *     summary: Update an AboutUs entry
  *     tags: [AboutUs]
  *     parameters:
  *       - in: path
@@ -155,20 +186,54 @@ router.get("/", getAllAboutUs);
  *         required: true
  *         schema:
  *           type: string
- *         description: The AboutUs ID to update
+ *         description: The ID of the AboutUs entry to update
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - aboutUsTitle
+ *               - aboutUsText
+ *               - mission
+ *               - vision
+ *               - valuesSubTitle
+ *               - valueOneTitle
+ *               - valueOne
+ *               - valueTwoTitle
+ *               - valueTwo
+ *               - valueThreeTitle
+ *               - valueThree
+ *               - imageURL
+ *               - userId
  *             properties:
- *               quantity:
- *                 type: number
- *                 example: 2
- *               condition:
+ *               aboutUsTitle:
  *                 type: string
- *                 example: "used"
+ *               aboutUsText:
+ *                 type: string
+ *               mission:
+ *                 type: string
+ *               vision:
+ *                 type: string
+ *               valuesSubTitle:
+ *                 type: string
+ *               valueOneTitle:
+ *                 type: string
+ *               valueOne:
+ *                 type: string
+ *               valueTwoTitle:
+ *                 type: string
+ *               valueTwo:
+ *                 type: string
+ *               valueThreeTitle:
+ *                 type: string
+ *               valueThree:
+ *                 type: string
+ *               imageURL:
+ *                 type: string
+ *               userId:
+ *                 type: string
  *     responses:
  *       200:
  *         description: AboutUs updated successfully
@@ -187,6 +252,8 @@ router.get("/", getAllAboutUs);
  */
 router.put('/:id', securityToken, updateAboutUsByID);
 
+
+// delete AboutUs by ID
 /**
  * @swagger
  * /aboutUs/{id}:
