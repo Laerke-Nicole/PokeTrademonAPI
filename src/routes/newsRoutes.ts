@@ -15,7 +15,7 @@ const router = express.Router();
  * @swagger
  * /news:
  *   post:
- *     summary: Add a news
+ *     summary: Add a news item
  *     tags: [News]
  *     requestBody:
  *       required: true
@@ -23,42 +23,34 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - userId
- *               - newsId
  *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Breaking News"
+ *               subTitle:
+ *                 type: string
+ *                 example: "This just in..."
+ *               text:
+ *                 type: string
+ *                 example: "Detailed news content goes here."
+ *               imageURL:
+ *                 type: string
+ *                 example: "https://example.com/image.jpg"
+ *               date:
+ *                 type: string
+ *                 example: "2025-05-18"
+ *               theme:
+ *                 type: string
+ *                 example: "Politics"
+ *               isHidden:
+ *                 type: boolean
+ *                 example: false
  *               userId:
  *                 type: string
- *                 description: The user's ID
  *                 example: "660f12abc1234def56789abc"
- *               newsId:
- *                 type: string
- *                 description: The ID of the news to add
- *                 example: "xy7-54"
  *     responses:
  *       200:
  *         description: News successfully added
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "News added"
- *                 collection:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       newsId:
- *                         type: string
- *                       quantity:
- *                         type: number
- *                       condition:
- *                         type: string
- *       404:
- *         description: User not found
  *       500:
  *         description: Internal server error
  */
@@ -125,16 +117,28 @@ router.get('/:id', getNewsByID);
  *             schema:
  *               type: object
  *               properties:
- *                 collection:
+ *                 news:
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
- *                       newsId:
+ *                       _id:
  *                         type: string
- *                       quantity:
- *                         type: number
- *                       condition:
+ *                       title:
+ *                         type: string
+ *                       subTitle:
+ *                         type: string
+ *                       text:
+ *                         type: string
+ *                       imageURL:
+ *                         type: string
+ *                       date:
+ *                         type: string
+ *                       theme:
+ *                         type: string
+ *                       isHidden:
+ *                         type: boolean
+ *                       userId:
  *                         type: string
  *       404:
  *         description: News not found
@@ -147,7 +151,7 @@ router.get("/", getAllNews);
  * @swagger
  * /news/{id}:
  *   put:
- *     summary: Update a news
+ *     summary: Update a news item
  *     tags: [News]
  *     parameters:
  *       - in: path
@@ -155,7 +159,7 @@ router.get("/", getAllNews);
  *         required: true
  *         schema:
  *           type: string
- *         description: The news ID to update
+ *         description: The ID of the news to update
  *     requestBody:
  *       required: true
  *       content:
@@ -163,25 +167,27 @@ router.get("/", getAllNews);
  *           schema:
  *             type: object
  *             properties:
- *               quantity:
- *                 type: number
- *                 example: 2
- *               condition:
+ *               title:
  *                 type: string
- *                 example: "used"
+ *               subTitle:
+ *                 type: string
+ *               text:
+ *                 type: string
+ *               imageURL:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *               theme:
+ *                 type: string
+ *               isHidden:
+ *                 type: boolean
+ *               userId:
+ *                 type: string
  *     responses:
  *       200:
  *         description: News updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "News updated"
  *       404:
- *         description: User or news not found
+ *         description: News not found
  *       500:
  *         description: Server error
  */
