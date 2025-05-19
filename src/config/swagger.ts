@@ -15,6 +15,10 @@ export const setupSwagger = (app: Express) => {
         {
           url: `http://localhost:${process.env.PORT || 5004}/api`
         },
+        {
+          url: 'https://poketrademonapi.onrender.com/api',
+          description: 'Live server',
+        },
       ],
       components: {
         securitySchemes: {
@@ -31,7 +35,7 @@ export const setupSwagger = (app: Express) => {
         }
       ]
     },
-    apis: ["./src/routes/*.ts"], // ✅ this is where @swagger comments live
+    apis: ["./src/routes/*.ts"],
   };
 
   const swaggerSpec = swaggerJsdoc(swaggerOptions);
