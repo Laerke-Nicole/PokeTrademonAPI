@@ -11,25 +11,18 @@ import { verifyRecaptcha } from "../utils/recaptcha";
  */
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-        console.log('Recaptcha token:', req.body.recaptchaToken);
     // verify reCAPTCHA token
     const { recaptchaToken } = req.body;
-    if (process.env.NODE_ENV !== 'development') {
-
-      if (!recaptchaToken) {
-        res.status(400).json({ error: "reCAPTCHA token missing." });
-        return;
-      }
-
-      const isHuman = await verifyRecaptcha(recaptchaToken);
-      if (!isHuman) {
-        res.status(403).json({ error: "Failed reCAPTCHA verification." });
-        return;
-      }
+    if (!recaptchaToken) {
+      res.status(400).json({ error: "reCAPTCHA token missing." });
+      return;
     }
 
-
+    const isHuman = await verifyRecaptcha(recaptchaToken);
+    if (!isHuman) {
+      res.status(403).json({ error: "Failed reCAPTCHA verification." });
+      return;
+    }
   
     const { error } = validateUserRegistration(req.body);
     if (error) {

@@ -8,7 +8,8 @@ test.describe("User Registration", () => {
     const user = {
         username: "John Doe",
         email: "mail@gmail.com",
-        password: "12345678"
+        password: "12345678",
+        recaptchaToken: "valid-recaptcha-token", 
     };
 
     // act
@@ -20,14 +21,15 @@ test.describe("User Registration", () => {
     expect(json.error).toEqual(null);
     });
 
-    test("Missing password user registration info", async ({ request }) => {
+    test("Invalid user registration info", async ({ request }) => {
     test.setTimeout(10_000);
 
     // arrange
     const user = {
         username: "John Doe",
         email: "mail@gmail.com",
-        // password missing
+        password: "123",
+        recaptchaToken: "",
     };
 
     // act
@@ -36,6 +38,6 @@ test.describe("User Registration", () => {
 
     // assert
     expect(response.status()).toBe(400);
-    expect(json.error).toEqual("\"password\" length must be at least 6 characters long");
+    expect(json.error).toEqual("\"recaptchaToken\" no recaptcha token provided");
     });
 });
