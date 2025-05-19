@@ -12,13 +12,13 @@ export const setupSwagger = (app: Express) => {
         description: "API for trading Pokémon cards between users",
       },
       servers: [
-        {
-          url: `http://localhost:${process.env.PORT || 5004}/api`
-        },
-        {
-          url: 'https://poketrademonapi.onrender.com/api',
-          description: 'Live server',
-        },
+        // {
+        //   url: `http://localhost:${process.env.PORT || 5004}/api`
+        // },
+        // {
+        //   url: 'https://poketrademonapi.onrender.com/api',
+        //   description: 'Live server',
+        // },
       ],
       components: {
         securitySchemes: {
