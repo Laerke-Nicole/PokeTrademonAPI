@@ -4,6 +4,7 @@ import UserModel from "../models/UserModel";
 import { IUserCard } from "../interfaces/User";
 import { findCard, transferCard } from "../utils/tradeUtils";
 import Notification from "../models/NotificationModel";
+import mongoose from 'mongoose';
 
 
 export const createTradeOffer = async (
@@ -58,7 +59,7 @@ export const createTradeOffer = async (
     let newTrade;
     try {
       newTrade = await TradeOffer.create({
-        senderId,
+        senderId: new mongoose.Types.ObjectId(senderId),
         receiverId,
         senderCards,
         receiverCards,
