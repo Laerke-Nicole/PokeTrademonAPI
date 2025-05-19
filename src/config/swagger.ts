@@ -38,6 +38,13 @@ export const setupSwagger = (app: Express) => {
     apis: ["./src/routes/*.ts"],
   };
 
-  const swaggerSpec = swaggerJsdoc(swaggerOptions);
+  // swagger options
+  const options = {
+      swaggerOptions,
+      // path to files with OpenAPI definitions
+      apis: ['**/*.ts'],
+  };
+
+  const swaggerSpec = swaggerJsdoc(options);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };
