@@ -22,10 +22,8 @@ export const createTradeOffer = async (
 
     if (!senderId || !senderCards || !receiverCards) {
       res.status(400).json({ message: 'Missing required fields' });
-
       return;
     }
-    
 
     let receiver = null;
     let receiverId = undefined;
@@ -48,38 +46,53 @@ export const createTradeOffer = async (
       receiverId = receiver._id;
     }
 
-    const newTrade = await TradeOffer.create({
+    console.log('🚨 Incoming trade POST:', {
       senderId,
-      receiverId,
       senderCards,
       receiverCards,
-      status: 'pending',
-      isOpenOffer
+      isOpenOffer,
+      typeofSenderId: typeof senderId
     });
 
-    // 🔔 Notification logic 
-if (isOpenOffer) {
-  const otherUsers = await UserModel.find({ _id: { $ne: senderId } });
-  const bulkNotifications = otherUsers.map((user) => ({
-    userId: user._id,
-    message: `A new open trade offer was created.`,
-  }));
-  await Notification.insertMany(bulkNotifications);
-} else if (receiverId) {
-  await Notification.create({
-    userId: receiverId,
-    message: `You have received a trade offer from ${receiver?.username}`,
-  });
-}
-    
+    // 🔒 Wrap the TradeOffer.create in its own try/catch
+    let newTrade;
+    try {
+      newTrade = await TradeOffer.create({
+        senderId,
+        receiverId,
+        senderCards,
+        receiverCards,
+        status: 'pending',
+        isOpenOffer
+      });
+    } catch (createErr) {
+      console.error('❌ Mongoose create error:', createErr);
+      res.status(400).json({ message: 'Trade creation failed', error: createErr });
+      return; // Stop execution
+    }
+
+    // 🔔 Notification logic
+    if (isOpenOffer) {
+      const otherUsers = await UserModel.find({ _id: { $ne: senderId } });
+      const bulkNotifications = otherUsers.map((user) => ({
+        userId: user._id,
+        message: `A new open trade offer was created.`,
+      }));
+      await Notification.insertMany(bulkNotifications);
+    } else if (receiverId) {
+      await Notification.create({
+        userId: receiverId,
+        message: `You have received a trade offer from ${receiver?.username}`,
+      });
+    }
 
     res.status(201).json(newTrade);
   } catch (err) {
     console.error('Failed to create trade offer:', err);
     next(err);
   }
-  
 };
+
 
 export const getOpenTradeOffers = async (
   req: Request,
