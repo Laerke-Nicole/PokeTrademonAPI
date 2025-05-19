@@ -27,6 +27,7 @@ const router = express.Router();
  *               - username
  *               - email
  *               - password
+ *               - recaptchaToken
  *             properties:
  *               username:
  *                 type: string
@@ -34,6 +35,8 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *              recaptchaToken:
+ *                type: string
  *     responses:
  *       201:
  *         description: User registered successfully
