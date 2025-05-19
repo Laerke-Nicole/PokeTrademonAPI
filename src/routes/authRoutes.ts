@@ -35,13 +35,15 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
- *              recaptchaToken:
- *                type: string
+ *               recaptchaToken:
+ *                 type: string
+ *                 description: Google reCAPTCHA token
  *     responses:
  *       201:
  *         description: User registered successfully
  */
 router.post("/register", registerUser);
+
 
 /**
  * @swagger
