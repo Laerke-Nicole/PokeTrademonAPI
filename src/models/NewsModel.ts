@@ -3,8 +3,8 @@ import { News } from '../interfaces/News';
 
 const newsSchema = new Schema<News>({
     title: { type: String, required: true, min: 2, max: 100 },
-    subTitle: { type: String, required: true, min: 2, max: 100 },
-    text: { type: String, required: true, min: 6, max: 1024 },
+    subTitle: { type: String, required: true, min: 2, max: 255 },
+    text: { type: String, required: true, min: 6 },
     imageURL: { type: String, required: true },
     date: { type: String, required: true, min: 8, max: 10 },
     theme: { type: String, required: true, min: 2, max: 100 },
