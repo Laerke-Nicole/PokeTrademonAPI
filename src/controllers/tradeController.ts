@@ -47,14 +47,6 @@ export const createTradeOffer = async (
       receiverId = receiver._id;
     }
 
-    console.log('🚨 Incoming trade POST:', {
-      senderId,
-      senderCards,
-      receiverCards,
-      isOpenOffer,
-      typeofSenderId: typeof senderId
-    });
-
     // 🔒 Wrap the TradeOffer.create in its own try/catch
     let newTrade;
     try {

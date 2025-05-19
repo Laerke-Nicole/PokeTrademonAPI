@@ -76,9 +76,7 @@ export const updateCardInCollection = async (
     if (quantity !== undefined) card.quantity = quantity;
     if (condition !== undefined) card.condition = condition;
 
-    console.log("Before save:", card);
 await user.save();
-console.log("After save:", card);
     res.json({ message: "Card updated", card });
   } catch (error) {
     next(error);

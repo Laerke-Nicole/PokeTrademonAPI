@@ -4,5 +4,3 @@ import app from "./app";
 const routes = app._router.stack
   .filter((r: any) => r.route)
   .map((r: any) => r.route.path);
-
-console.log("Loaded Routes:", routes);
