@@ -15,7 +15,6 @@ setupSwagger(app);
 
 // ✅ Middleware
 app.use(express.json()); 
-app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 
@@ -25,6 +24,8 @@ connectDB();
 // ✅ CORS configuration
 app.use(cors({
   origin: ['http://localhost:5173'],
+  methods: 'GET,HEAD,PUT,OPTIONS,PATCH,POST,DELETE',
+  allowedHeaders: ['auth-token', 'Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
   credentials: true,
 }));
 
