@@ -11,6 +11,7 @@ import { verifyRecaptcha } from "../utils/recaptcha";
  */
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
+    /*
     // verify reCAPTCHA token
     const { recaptchaToken } = req.body;
     if (!recaptchaToken) {
@@ -23,6 +24,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       res.status(403).json({ error: "Failed reCAPTCHA verification." });
       return;
     }
+*/
   
     const { error } = validateUserRegistration(req.body);
     if (error) {
@@ -38,6 +40,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
+    
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const newUser = new UserModel({
