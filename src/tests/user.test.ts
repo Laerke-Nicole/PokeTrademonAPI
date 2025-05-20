@@ -8,8 +8,7 @@ test.describe("User Registration", () => {
     const user = {
         username: "John Doe",
         email: "mail@gmail.com",
-        password: "12345678",
-        recaptchaToken: "valid-recaptcha-token", 
+        password: "12345678", 
     };
 
     // act
@@ -28,8 +27,7 @@ test.describe("User Registration", () => {
     const user = {
         username: "John Doe",
         email: "mail@gmail.com",
-        password: "123",
-        recaptchaToken: "",
+        // password: "123",
     };
 
     // act
