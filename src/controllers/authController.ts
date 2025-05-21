@@ -4,7 +4,7 @@ import UserModel from "../models/UserModel";
 import connectDB from "../config/db";
 import { validateUserRegistration, validateUserLogin } from "../utils/validationSchemas";
 import { generateToken } from "../utils/jwt";
-import { verifyRecaptcha } from "../utils/recaptcha";
+// import { verifyRecaptcha } from "../utils/recaptcha";
 
 /**
  *  Register a new user
