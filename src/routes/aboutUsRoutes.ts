@@ -19,6 +19,8 @@ const router = express.Router();
  *   post:
  *     summary: Create a new AboutUs entry
  *     tags: [AboutUs]
+ *     security:
+ *       - auth-token: []
  *     requestBody:
  *       required: true
  *       content:
@@ -63,16 +65,10 @@ const router = express.Router();
  *               email:
  *                 type: string
  *     responses:
- *       201:
- *         description: AboutUs successfully created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/AboutUs'
- *       400:
- *         description: Invalid input
+ *       200:
+ *         description: About us successfully added
  *       500:
- *         description: Server error
+ *         description: Internal server error
  */
 router.post("/", securityToken, createAboutUs); 
 
@@ -210,6 +206,8 @@ router.get("/", getAllAboutUs);
  *   put:
  *     summary: Update an AboutUs entry
  *     tags: [AboutUs]
+ *     security:
+ *       - auth-token: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -299,6 +297,8 @@ router.put('/:id', securityToken, updateAboutUsByID);
  *   delete:
  *     summary: Remove a AboutUs
  *     tags: [AboutUs]
+ *     security:
+ *       - auth-token: []
  *     parameters:
  *       - in: path
  *         name: id

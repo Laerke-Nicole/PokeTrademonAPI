@@ -19,6 +19,8 @@ const router = express.Router();
  *   post:
  *     summary: Add a news item
  *     tags: [News]
+ *     security:
+ *       - auth-token: []
  *     requestBody:
  *       required: true
  *       content:
@@ -159,6 +161,8 @@ router.get("/", getAllNews);
  *   put:
  *     summary: Update a news item
  *     tags: [News]
+ *     security:
+ *       - auth-token: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -207,6 +211,8 @@ router.put('/:id', securityToken, updateNewsByID);
  *   delete:
  *     summary: Remove a news
  *     tags: [News]
+ *     security:
+ *       - auth-token: []
  *     parameters:
  *       - in: path
  *         name: id

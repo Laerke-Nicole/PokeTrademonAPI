@@ -26,7 +26,12 @@ export const setupSwagger = (app: Express) => {
             type: 'http',
             scheme: 'bearer',
             bearerFormat: 'JWT'
-          }
+          },
+          'auth-token': {
+            type: 'apiKey',
+            in: 'header',
+            name: 'auth-token',
+          },
         }
       },
       security: [
