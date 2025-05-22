@@ -20,8 +20,9 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🧪 Run tests
-        run: npm run test
+      - name: 🧪 Type-check tests and run Jest
+        run: tsc --project tsconfig.test.json --noEmit && npm run test-only
+
 
   deploy_to_render:
     needs: build_and_test
