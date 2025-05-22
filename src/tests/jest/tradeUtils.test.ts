@@ -1,5 +1,5 @@
-import { findCard, transferCard } from "../utils/tradeUtils";
-import { IUserCard } from "../interfaces/User";
+import { findCard, transferCard } from "../../utils/tradeUtils";
+import { IUserCard } from "../../interfaces/User";
 
 describe("tradeUtils", () => {
   describe("findCard", () => {
