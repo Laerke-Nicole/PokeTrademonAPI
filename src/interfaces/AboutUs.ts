@@ -12,5 +12,8 @@ export interface AboutUs extends Document {
   valueThreeTitle: string;
   valueThree: string;
   imageURL: string;
+  openingHours: string;
+  phoneNumber: number;
+  email: string;
   userId: string;
 }

@@ -56,6 +56,12 @@ const router = express.Router();
  *                 type: string
  *               imageURL:
  *                 type: string
+ *              openingHours:
+ *                type: string
+ *              phoneNumber:
+ *               type: number
+ *              email:
+ *               type: string
  *     responses:
  *       201:
  *         description: AboutUs successfully created
@@ -95,20 +101,38 @@ router.post("/", securityToken, createAboutUs);
  *               properties:
  *                 _id:
  *                   type: string
- *                 title:
+ *                 userId:
  *                   type: string
- *                 subTitle:
+ *                 aboutUsTitle:
  *                   type: string
- *                 text:
+ *                 aboutUsText:
+ *                   type: string
+ *                 mission:
+ *                   type: string
+ *                 vision:
+ *                   type: string
+ *                 valuesSubTitle:
+ *                   type: string
+ *                 valueOneTitle:
+ *                   type: string
+ *                 valueOne:
+ *                   type: string
+ *                 valueTwoTitle:
+ *                   type: string
+ *                 valueTwo:
+ *                   type: string
+ *                 valueThreeTitle:
+ *                   type: string
+ *                 valueThree:
  *                   type: string
  *                 imageURL:
  *                   type: string
- *                 date:
+ *                 openingHours:
  *                   type: string
- *                 theme:   
- *                  type: string
- *                 isHidden:
- *                   type: boolean
+ *                 phoneNumber:
+ *                   type: number
+ *                 email:
+ *                   type: string
  *       404:
  *         description: AboutUs not found
  *       500:

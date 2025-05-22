@@ -14,6 +14,9 @@ const aboutUsSchema = new Schema<AboutUs>({
     valueThreeTitle: { type: String, required: true, min: 2, max: 100 },
     valueThree: { type: String, required: true, min: 2, max: 255 },
     imageURL: { type: String, required: true },
+    openingHours: { type: String, required: true, min: 2, max: 100 },
+    phoneNumber: { type: Number, required: true, min: 2, max: 100 },
+    email: { type: String, required: true, min: 2, max: 100 },
     userId: { type: String, required: true },
 });
 
