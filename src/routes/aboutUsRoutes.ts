@@ -59,7 +59,7 @@ const router = express.Router();
  *              openingHours:
  *                type: string
  *              phoneNumber:
- *               type: number
+ *               type: string
  *              email:
  *               type: string
  *     responses:
@@ -130,7 +130,7 @@ router.post("/", securityToken, createAboutUs);
  *                 openingHours:
  *                   type: string
  *                 phoneNumber:
- *                   type: number
+ *                   type: string
  *                 email:
  *                   type: string
  *       404:

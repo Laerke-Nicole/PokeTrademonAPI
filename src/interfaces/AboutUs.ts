@@ -13,7 +13,7 @@ export interface AboutUs extends Document {
   valueThree: string;
   imageURL: string;
   openingHours: string;
-  phoneNumber: number;
+  phoneNumber: string;
   email: string;
   userId: string;
 }
