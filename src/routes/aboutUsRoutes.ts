@@ -56,12 +56,12 @@ const router = express.Router();
  *                 type: string
  *               imageURL:
  *                 type: string
- *              openingHours:
- *                type: string
- *              phoneNumber:
- *               type: string
- *              email:
- *               type: string
+ *               openingHours:
+ *                 type: string
+ *               phoneNumber:
+ *                 type: string
+ *               email:
+ *                 type: string
  *     responses:
  *       201:
  *         description: AboutUs successfully created
@@ -187,6 +187,12 @@ router.get('/:id', getAboutUsByID);
  *                         type: string
  *                       imageURL:
  *                         type: string
+ *                       openingHours:    
+ *                         type: string
+ *                       phoneNumber:
+ *                         type: string
+ *                       email:
+ *                         type: string
  *                       userId:
  *                         type: string
  *       404:
@@ -230,6 +236,9 @@ router.get("/", getAllAboutUs);
  *               - valueThreeTitle
  *               - valueThree
  *               - imageURL
+ *               - openingHours
+ *               - phoneNumber
+ *               - email
  *               - userId
  *             properties:
  *               aboutUsTitle:
@@ -255,6 +264,12 @@ router.get("/", getAllAboutUs);
  *               valueThree:
  *                 type: string
  *               imageURL:
+ *                 type: string
+ *               openingHours:
+ *                 type: string
+ *               phoneNumber:
+ *                 type: string
+ *               email:
  *                 type: string
  *               userId:
  *                 type: string
