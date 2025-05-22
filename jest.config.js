@@ -7,5 +7,10 @@ module.exports = {
   },
   moduleFileExtensions: ["ts", "js", "json"],
   testMatch: ["**/*.test.ts"],
-  testPathIgnorePatterns: ["/playwright/"]
+  testPathIgnorePatterns: ["/playwright/"],
+  globals: {
+    "ts-jest": {
+      tsconfig: "tsconfig.test.json"
+    }
+  }
 };
