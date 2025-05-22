@@ -4,28 +4,12 @@ import UserModel from "../models/UserModel";
 import connectDB from "../config/db";
 import { validateUserRegistration, validateUserLogin } from "../utils/validationSchemas";
 import { generateToken } from "../utils/jwt";
-// import { verifyRecaptcha } from "../utils/recaptcha";
 
 /**
  *  Register a new user
  */
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    /*
-    // verify reCAPTCHA token
-    const { recaptchaToken } = req.body;
-    if (!recaptchaToken) {
-      res.status(400).json({ error: "reCAPTCHA token missing." });
-      return;
-    }
-
-    const isHuman = await verifyRecaptcha(recaptchaToken);
-    if (!isHuman) {
-      res.status(403).json({ error: "Failed reCAPTCHA verification." });
-      return;
-    }
-*/
-  
     const { error } = validateUserRegistration(req.body);
     if (error) {
       res.status(400).json({ error: error.details[0].message });
