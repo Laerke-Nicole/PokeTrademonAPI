@@ -16,7 +16,7 @@ export const setupSwagger = (app: Express) => {
           url: `http://localhost:${process.env.PORT || 5004}/api`
         },
         {
-          url: 'https://poketrademonapi.onrender.com/api',
+          url: 'https://poketrademonapi-4o29.onrender.com/api',
           description: 'Live server',
         },
       ],
