@@ -17,7 +17,7 @@ export const setupSwagger = (app: Express) => {
         },
         {
           url: 'https://poketrademonapi-4o29.onrender.com/api',
-          description: 'Live server',
+          description: 'Live Server',
         },
       ],
       components: {
