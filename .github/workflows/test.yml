@@ -9,19 +9,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ⬇️ Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: 🟢 Set up Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: 🧪 Type-check tests and run Jest
+      - name: Type-check tests and run Jest
         run: tsc --project tsconfig.test.json --noEmit && npm run test-only
+
+      - name: Run Playwright tests
+        run: npm run playwright
 
 
   deploy_to_render:
@@ -30,5 +33,5 @@ jobs:
     if: ${{ success() }}
 
     steps:
-      - name: 🚀 Trigger Render Deploy Hook
+      - name: Trigger Render Deploy Hook
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
