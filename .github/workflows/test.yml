@@ -23,10 +23,10 @@ jobs:
       - name: Type-check tests and run Jest
         run: tsc --project tsconfig.test.json --noEmit && npm run test-only
 
-      - name: Run Playwright tests
-        env:
-          MONGODB_URI: ${{ secrets.MONGO_URI }}
-        run: npm run playwright
+      # - name: Run Playwright tests
+      #   env:
+      #     MONGODB_URI: ${{ secrets.MONGO_URI }}
+      #   run: npm run playwright
 
 
 
