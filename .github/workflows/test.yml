@@ -1,4 +1,4 @@
-name: CI + Deploy to Render
+name: CI/CD + deploy to Render
 
 on:
   push:
@@ -24,7 +24,10 @@ jobs:
         run: tsc --project tsconfig.test.json --noEmit && npm run test-only
 
       - name: Run Playwright tests
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: npm run playwright
+
 
 
   deploy_to_render:
