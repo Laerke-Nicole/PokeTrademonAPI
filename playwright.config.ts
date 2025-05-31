@@ -4,7 +4,7 @@ export default defineConfig({
   use: {
     baseURL: 'https://poketrademonapi.onrender.com/api',
   },
-  testDir: './src/tests',
+  testDir: './src/tests/playwright',
   timeout: 30000,
 
   webServer: {
