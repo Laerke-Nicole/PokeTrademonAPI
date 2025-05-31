@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_URI: ${{ secrets.MONGO_URI }}
         run: npm run playwright
 
 
